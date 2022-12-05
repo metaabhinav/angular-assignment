@@ -1,0 +1,223 @@
+<div class="container-fluid">
+  <div class="row">
+    <!--create todo form section -->
+    <div style="background: #303030; height: 88vh" class="col-md-3">
+      <div>
+        <mat-card class="mt-3">
+          <form [formGroup]="todoForm" class="m-3">
+            <mat-form-field style="width: 100%" appearance="outline">
+              <mat-label>Title</mat-label>
+              <input
+                required
+                ngModel
+                formControlName="itemTitle"
+                matInput
+                placeholder="Placeholder"
+              />
+            </mat-form-field>
+            <mat-form-field style="width: 100%" appearance="outline">
+              <mat-label>Description*</mat-label>
+              <input
+                required
+                ngModel
+                formControlName="itemdesc"
+                matInput
+                placeholder="Placeholder"
+              />
+            </mat-form-field>
+
+            <div>
+              <mat-form-field style="width: 100%" appearance="fill">
+                <mat-label>Priority</mat-label>
+                <select
+                  formControlName="priority"
+                  matNativeControl
+                  ngModel
+                  required
+                  class="ml-3"
+                >
+                  <option value="Low" class="ml-3">Low</option>
+                  <option value="Medium" class="ml-3">Medium</option>
+                  <option value="High" class="ml-3">High</option>
+                </select>
+              </mat-form-field>
+            </div>
+
+            <!-- add btn -->
+            <button
+              *ngIf="!isEditEnable"
+              (click)="addTask()"
+              mat-raised-button
+              class="bg-primary text-white"
+              [disabled]="!todoForm.valid"
+            >
+              ADD
+            </button>
+
+            <!-- update task btn -->
+            <button
+              *ngIf="isEditEnable"
+              (click)="updateTask()"
+              [disabled]="todoForm.invalid"
+              mat-raised-button
+              class="bg-primary text-white"
+            >
+              UPDATE
+            </button>
+          </form>
+        </mat-card>
+      </div>
+    </div>
+    <!-- create todo form section end -->
+
+    <!-- todo list section -->
+    <div class="col md-9">
+      <div cdkDropListGroup>
+        <div class="row">
+          <!-- todo list -->
+          <div class="col-md-4">
+            <div class="example-container">
+              <h2>New</h2>
+
+              <div
+                cdkDropList
+                [cdkDropListData]="tasks"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <div
+                  class="example-box"
+                  *ngFor="let item of tasks; let i = index"
+                  cdkDrag
+                  [ngClass]="{
+                    error: item.priority == 'High',
+                    warn: item.priority == 'Medium',
+                    message: item.priority == 'Low'
+                  }"
+                >
+                  <div class="d-flex flex-column">
+                    <h2>
+                      {{ item.title }}
+                    </h2>
+                    <h4>
+                      {{ item.description }}
+                    </h4>
+                  </div>
+
+                  <!-- button -->
+                  <div class="box">
+                    <!-- delete -->
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="deleteNewTask(i)"
+                    >
+                      <mat-icon> delete </mat-icon>
+                    </button>
+                    <!-- edit -->
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="onEditNew(item, i)"
+                    >
+                      <mat-icon> edit </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- In progress section -->
+          <div class="col-md-4">
+            <div class="example-container">
+              <h2>In Progress</h2>
+
+              <div
+                cdkDropList
+                [cdkDropListData]="inprogress"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <div
+                  class="example-box"
+                  *ngFor="let item of inprogress; let i = index"
+                  cdkDrag
+                  [ngClass]="{
+                    error: item.priority == 'High',
+                    warn: item.priority == 'Medium',
+                    message: item.priority == 'Low'
+                  }"
+                >
+                  <div class="d-flex flex-column">
+                    <h2>
+                      {{ item.title }}
+                    </h2>
+                    <h4>
+                      {{ item.description }}
+                    </h4>
+                  </div>
+
+                  <!-- button -->
+                  <div class="box">
+                    <!-- delete -->
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="deleteInProgressTask(i)"
+                    >
+                      <mat-icon> delete </mat-icon>
+                    </button>
+                    <!-- edit -->
+                    <button
+                      mat-icon-button
+                      color="primary"
+                      (click)="onEditInProgress(item, i)"
+                    >
+                      <mat-icon> edit </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Done section -->
+          <div class="col-md-4">
+            <div class="example-container">
+              <h2>Completed</h2>
+
+              <div
+                cdkDropList
+                [cdkDropListData]="done"
+                class="example-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <div
+                  class="example-box"
+                  *ngFor="let item of done"
+                  [ngClass]="{
+                    error: item.priority == 'High',
+                    warn: item.priority == 'Medium',
+                    message: item.priority == 'Low'
+                  }"
+                >
+                  <!-- cdkDrag -->
+                  <div class="d-flex flex-column">
+                    <h2>
+                      {{ item.title }}
+                    </h2>
+                    <h4>
+                      {{ item.description }}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- todo list section end -->
+  </div>
+</div>
